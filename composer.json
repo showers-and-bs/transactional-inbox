@@ -1,0 +1,30 @@
+{
+    "name": "showers-and-bs/transactional-inbox",
+    "description": "Laravel implementation of inbox pattern aka idempotent consumer",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "ShowersAndBs\\TransactionalInbox\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Predrag Rakonjac",
+            "email": "predrag.rakonjac@quantox.com"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "anik/laravel-amqp": "^1.4"
+    },
+    "require-dev": {},
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ShowersAndBs\\TransactionalInbox\\TransactionalInboxServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
