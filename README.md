@@ -1,8 +1,10 @@
-# Transactional inbox AKA Idempotent consumer
+# Inbox pattern
 
-The package is implementation of [Transactional inbox AKA Idempotent consumer](https://microservices.io/patterns/data/transactional-outbox.html) for the project ThirstyX.
+AKA **Idempotent consumer**
 
-Read [this nice explanation](https://softwaremill.com/microservices-101/) of the pattern.
+The package is implementation of [Idempotent consumer pattern](https://microservices.io/patterns/communication-style/idempotent-consumer.html) for the project ThirstyX.
+
+Read [this nice explanation](https://softwaremill.com/microservices-101/#inbox-pattern) of the pattern.
 
 ## Installation
 
@@ -114,9 +116,9 @@ class TestEventListener
 }
 ```
 
-## For local development
+## Guide for package development
 
-Create folder named **packages** in the same level where resides microservice folders.
+Create folder named **packages** in the same level where reside microservice applications.
 
 Get into it and run `git clone git@github.com:showers-and-bs/transactional-inbox.git`.
 
@@ -139,3 +141,5 @@ Now get into the folder `vendor/showers-and-bs`, delete folder `transactional-in
 ```sh
 ln -s ../../../packages/transactional-inbox/ ./transactional-inbox
 ```
+
+Happy coding!
