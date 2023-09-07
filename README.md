@@ -8,7 +8,7 @@ Read [this nice explanation](https://softwaremill.com/microservices-101/) of the
 
 The package intended only for the project ThirstyX, it is not in Packagist.
 
-Make a slight adjustment to your composer.json file of the main app.
+Add path to Github repository to your composer.json file.
 
 ```json
     "repositories": [
@@ -18,21 +18,20 @@ Make a slight adjustment to your composer.json file of the main app.
         }
     ],
 ```
-You can now require your package in the Laravel application.
+Now run composer require to pull in the package.
 
 ```sh
-composer require showers-and-bs/transactional-inbox:dev-master
+composer require showers-and-bs/transactional-inbox
 ```
+## Usage
 
-Then publish config file
+Publish config file
 
 ```sh
 php artisan vendor:publish --tag=transactional-inbox-config
 ```
 
 In config file set attribute `queue`, that is name of the rabbitmq queue for your app. It should be set one and not change anymore. In case of change be sure that the queue with old name is empty or you risk to lose some valuable data.
-
-## Usage
 
 To run message consumer deamon type
 
@@ -48,7 +47,7 @@ Go to config file and add events that you wish to listen in your app, for exampl
     ],
 ```
 
-An event receive `ShowersAndBs\TransactionalInbox\Models\IncomingMessage` as argument, for example:
+An event receive object of class `ShowersAndBs\TransactionalInbox\Models\IncomingMessage` as argument, see example below:
 
 ```php
 <?php
