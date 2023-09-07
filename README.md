@@ -33,9 +33,9 @@ Publish config file
 php artisan vendor:publish --tag=transactional-inbox-config
 ```
 
-Set config attribute `queue`, that is a name of the rabbit queue for your app. It should be set once and never changed. In case of change, be sure that the queue with old name is empty or you risk to lose some valuable data.
+Set config attribute **queue**, that is a name of the rabbit queue for your app. It should be set once and never changed. In case of change, be sure that the queue with old name is empty or you risk to lose some valuable data.
 
-To run message consumer deamon execute command
+To run message consumer deamon execute command amqp:consume. It connects your app to the message broker and listens for the messages delivered on the queue you set in the config file.
 
 ```sh
 php artisan amqp:consume
