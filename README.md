@@ -33,15 +33,15 @@ Publish config file
 php artisan vendor:publish --tag=transactional-inbox-config
 ```
 
-In config file set attribute `queue`, that is name of the rabbitmq queue for your app. It should be set one and not change anymore. In case of change be sure that the queue with old name is empty or you risk to lose some valuable data.
+Set config attribute `queue`, that is a name of the rabbit queue for your app. It should be set once and never changed. In case of change, be sure that the queue with old name is empty or you risk to lose some valuable data.
 
-To run message consumer deamon type
+To run message consumer deamon execute command
 
 ```sh
 php artisan amqp:consume
 ```
 
-Go to config file and add events that you wish to listen in your app, for example.
+Go to the config file and add the events you want to listen to in your app, for example.
 
 ```php
     'events' => [
@@ -49,7 +49,9 @@ Go to config file and add events that you wish to listen in your app, for exampl
     ],
 ```
 
-An event receive object of class `ShowersAndBs\TransactionalInbox\Models\IncomingMessage` as argument, see example below:
+In the example above MEM_TEST is name of the message that you have set in publishable event, the events that implement **ShouldBePublished** interface exposed by showers-and-bs/transactional-outbox.
+
+The event receives object of class `ShowersAndBs\TransactionalInbox\Models\IncomingMessage` as argument, see example below:
 
 ```php
 <?php
@@ -84,7 +86,7 @@ class TestEvent
 }
 ```
 
-Now its up to you how you will handle it further, but do not forget to set message states depending on processing result.
+Now its up to you how you will handle it further, but do not forget to set message status (processing, failed or complete) depending on processing result.
 ```php
 <?php
 
