@@ -17,17 +17,12 @@ return [
     | Events of interest
     |--------------------------------------------------------------------------
     |
-    | Array keys should be values of the attribute `event` of messages
-    | received from the message broker.
-    | Array values should be class name of events to be dispatched for the
-    | received message.
-    |
-    | The event class receive ShowersAndBs\TransactionalInbox\Models as argument.
+    | List of events that should be received from the message broker.
     |
     */
 
     'events' => [
-        // 'MEM_USER_LOGIN' => \App\Events\UserLogin::class,
+        \ShowersAndBs\ThirstyEvents\Events\TestEvent::class,
     ],
 
 ];

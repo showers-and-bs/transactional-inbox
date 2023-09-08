@@ -4,7 +4,7 @@ namespace ShowersAndBs\TransactionalInbox\Services;
 
 use Anik\Amqp\ConsumableMessage;
 use ShowersAndBs\TransactionalInbox\Models\IncomingMessage;
-use ShowersAndBs\TransactionalOutbox\DTO\ThirstyxMessage;
+use ShowersAndBs\ThirstyEvents\DTO\RabbitMqMessagePayload;
 
 class InboxService
 {
@@ -12,9 +12,9 @@ class InboxService
     /**
      * Initialize object
      *
-     * @param ThirstyxMessage $messageDTO
+     * @param RabbitMqMessagePayload $messageDTO
      */
-    public function __construct(private ThirstyxMessage $messageDTO)
+    public function __construct(private RabbitMqMessagePayload $messageDTO)
     {
         $this->message = $messageDTO;
     }
@@ -26,9 +26,7 @@ class InboxService
      */
     public function shouldConsumeMessage(): bool
     {
-        $eventsToBeDispatched = config('transactional_inbox.events');
-
-        return array_key_exists($this->message->event, $eventsToBeDispatched);
+        return in_array($this->message->event, config('transactional_inbox.events'));
     }
 
     /**
@@ -40,17 +38,6 @@ class InboxService
     public function shouldPersistMessage(): bool
     {
         return ! (new IncomingMessage)->isReceived($this->message->event_id);
-    }
-
-    /**
-     * Get class name of the event to be dispatched or null
-     *
-     * @param  string $eventKey
-     * @return string|null
-     */
-    public function eventClassToDispatch(): ?string
-    {
-        return config('transactional_inbox.events.' . $this->message->event);
     }
 
     /**

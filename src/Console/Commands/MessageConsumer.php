@@ -57,7 +57,7 @@ class MessageConsumer extends Command
 
         $messageDTO = @unserialize($body);
 
-        if (false === ($messageDTO instanceof \ShowersAndBs\TransactionalOutbox\DTO\ThirstyxMessage)) {
+        if (false === ($messageDTO instanceof \ShowersAndBs\ThirstyEvents\DTO\RabbitMqMessagePayload)) {
             $this->line("CONSUMER: Unexpected message {$body}");
             // $message->reject(); // this is going to requeue the message
             $message->ack();
@@ -81,26 +81,17 @@ class MessageConsumer extends Command
         }
 
         // STEP 1 - persist message to inbox table
-        $inboxModel = $inboxService->persistMessage();
+        $incomingMessage = $inboxService->persistMessage();
         $message->ack();
 
-        // STEP 2 - dispatch event to processing
+        // STEP 2 - dispatch event MessageReceived
         // do this in try/catch block to not interrupt deamon execution by an exception in outer code
         try {
-            // get event class to dispatch
-            $event = $inboxService->eventClassToDispatch();
-
-            if (! class_exists($event)) {
-                throw new \Exception("Event class with the name {$event} is not defined.", 1);
-            }
-
-            $this->line("CONSUMER: Dispatching to process event {$event}");
-
-            // dispatch event to be processed in the main app
-            event(new $event($inboxModel));
+            // dispatch event for processing in the main app
+            event(new MessageReceived($incomingMessage));
 
         } catch (\Throwable $e) {
-            $this->line("CONSUMER: Exception thrown!!! " .  $e->getMessage());
+            $this->line("CONSUMER: Exception thrown!!! " . $e->getMessage());
             \Log::error("CONSUMER: Exception thrown!!!", [$e->getMessage()]);
         }
     }

@@ -4,7 +4,7 @@ namespace ShowersAndBs\TransactionalInbox\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use ShowersAndBs\TransactionalOutbox\DTO\ThirstyxMessage;
+use ShowersAndBs\ThirstyEvents\DTO\RabbitMqMessagePayload;
 
 class IncomingMessage extends Model
 {
@@ -19,9 +19,9 @@ class IncomingMessage extends Model
     /**
      * Persist an publishable event to the database
      *
-     * @param \ShowersAndBs\TransactionalOutbox\DTO\ThirstyxMessage $message
+     * @param \ShowersAndBs\ThirstyEvents\DTO\RabbitMqMessagePayload $message
      */
-    public function persistMessage(ThirstyxMessage $message): void
+    public function persistMessage(RabbitMqMessagePayload $message): void
     {
         $this->event_id         = $message->event_id;
         $this->event            = $message->event;
