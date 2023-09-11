@@ -22,7 +22,7 @@ return [
     */
 
     'events' => [
-        \ShowersAndBs\ThirstyEvents\Events\TestEvent::class,
+        // \ShowersAndBs\ThirstyEvents\Events\TestEvent::class => [\App\Handlers\TestEventHandler::class, 'handle'],
     ],
 
 ];
