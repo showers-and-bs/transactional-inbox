@@ -41,79 +41,50 @@ To run message consumer deamon execute command amqp:consume. It connects your ap
 php artisan amqp:consume
 ```
 
-Go to the config file and add the events you want to listen to in your app, for example.
+Go to the config file and add the events you want to listen to in your app and corresponding handler methods similar to laravel routes, for example.
 
 ```php
     'events' => [
-        'MEM_TEST' => \App\Events\TestEvent::class,
+        \ShowersAndBs\ThirstyEvents\Events\TestEvent::class => [\App\Handlers\TestEventHandler::class, 'handle'],
     ],
 ```
 
-In the example above MEM_TEST is name of the message that you have set in publishable event, the events that implement **ShouldBePublished** interface exposed by showers-and-bs/transactional-outbox.
+In the example above TestEvent is the name of publishable event (the events that implement **ShouldBePublished** interface exposed by showers-and-bs/thirsty-events).
 
-The event receives object of class `ShowersAndBs\TransactionalInbox\Models\IncomingMessage` as argument, see example below:
-
-```php
-<?php
-
-namespace App\Events;
-
-use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Queue\SerializesModels;
-use ShowersAndBs\TransactionalInbox\Models\IncomingMessage;
-
-class TestEvent
-{
-    use Dispatchable, SerializesModels;
-
-    /**
-     * Message received from the broker
-     *
-     * @var \ShowersAndBs\TransactionalInbox\Models\IncomingMessage
-     */
-    public $message;
-
-    /**
-     * Create a new event instance.
-     *
-     * @param  IncomingMessage $message
-     * @return void
-     */
-    public function __construct(IncomingMessage $message)
-    {
-        $this->message = $message;
-    }
-}
-```
+Arguments of the handler method are object of class `ShowersAndBs\TransactionalInbox\Models\IncomingMessage` and publishable event, see example below:
 
 Now its up to you how you will handle it further, but do not forget to set message status (processing, failed or complete) depending on processing result.
+
 ```php
 <?php
 
-namespace App\Listeners;
+namespace App\Handlers;
 
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
+use ShowersAndBs\ThirstyEvents\Events\TestEvent;
+use ShowersAndBs\TransactionalInbox\Models\IncomingMessage;
 
-class TestEventListener
+class TestEventHandler
 {
     /**
-     * Handle the event.
+     * Handle publishable event.
      */
-    public function handle(\App\Events\TestEvent $event): void
+    public function handle(IncomingMessage $incomingMessage, TestEvent $event): void
     {
-        $event->message->setProcessing();
+        $incomingMessage->setProcessing();
 
         try {
-            $messageContent = $event->message->payload;
-            // do somthing with $messageContent
+            $text = $event->message;
 
-        } catch (\Exception $e) {
+            \Log::debug(__CLASS__, ["TestEvent public property `message` contains text `$text`"]);
 
-            $event->message->setFailed();
+            \Log::debug(var_export($event, 1));
+
+        } catch (\Throwable $e) {
+            $incomingMessage->setFailed();
+            throw $e;
         }
 
-        $event->message->setComplete();
+        $incomingMessage->setComplete();
     }
 }
 ```
