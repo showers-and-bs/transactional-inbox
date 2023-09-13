@@ -27,7 +27,13 @@ composer require showers-and-bs/transactional-inbox
 ```
 ## Usage
 
-Publish config file
+Run migrations to create table **incoming_messages**.
+
+```sh
+php artisan migration
+```
+
+Publish config file.
 
 ```sh
 php artisan vendor:publish --tag=transactional-inbox-config
