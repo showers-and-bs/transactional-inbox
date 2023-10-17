@@ -3,7 +3,6 @@
 namespace ShowersAndBs\TransactionalInbox\Services;
 
 use Anik\Amqp\ConsumableMessage;
-use ShowersAndBs\ThirstyEvents\Contracts\ShouldBePublished;
 use ShowersAndBs\ThirstyEvents\DTO\RabbitMqMessagePayload;
 use ShowersAndBs\TransactionalInbox\Models\IncomingMessage;
 
@@ -55,23 +54,4 @@ class InboxService
         return $model;
     }
 
-    /**
-     * Get instance of published event
-     *
-     * @return Object
-     */
-    public function publishableEventInstance(): ShouldBePublished
-    {
-        return unserialize($this->message->payload);
-    }
-
-    /**
-     * Get handler method for the publishable event
-     *
-     * @return Object
-     */
-    public function eventHandler(): array
-    {
-        return config("transactional_inbox.events.{$this->message->event}");
-    }
 }
