@@ -35,6 +35,7 @@ class TransactionalInboxServiceProvider extends ServiceProvider
     {
         $this->commands([
             \ShowersAndBs\TransactionalInbox\Console\Commands\MessageConsumer::class,
+            \ShowersAndBs\TransactionalInbox\Console\Commands\MessageInbox::class,
         ]);
     }
 
