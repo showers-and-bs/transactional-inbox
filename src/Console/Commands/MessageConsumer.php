@@ -84,23 +84,11 @@ class MessageConsumer extends Command
         $incomingMessage = $inboxService->persistMessage();
         $message->ack();
 
-        // STEP 2 - dispatch event MessageReceived
+        // STEP 2 - run handler for the received event
         // do this in try/catch block to not interrupt deamon execution by an exception in outer code
         try {
-            list($handlerClass, $handlerMethod) = $inboxService->eventHandler();
 
-            if (! class_exists($handlerClass) ) {
-                throw new \Exception("Class $handlerClass does not exist.", 1);
-            }
-
-            if (! method_exists($handlerClass, $handlerMethod) ) {
-                throw new \Exception("Method $handlerClass@$handlerMethod does not exist.", 1);
-            }
-
-            $event = $inboxService->publishableEventInstance();
-
-            // dispatch event for processing in the main app
-            (new $handlerClass)->$handlerMethod($incomingMessage, $event);
+            $incomingMessage->runEventHandler();
 
         } catch (\Throwable $e) {
             // $this->line("CONSUMER: Exception thrown!!! " . $e->getMessage());
